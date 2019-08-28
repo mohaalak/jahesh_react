@@ -1,5 +1,5 @@
-import mohaalak from './mohaalak';
-//@jsx mohaalak.createElement
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 import { TestApp } from './test.jsx';
 
@@ -8,7 +8,7 @@ const root = document.getElementById('root');
 function Form({ onsubmit }) {
   return (
     <form
-      onsubmit={event => {
+      onSubmit={event => {
         event.preventDefault();
         onsubmit(event.target[0].value);
       }}
@@ -29,7 +29,7 @@ function List({ todos, toggleTodo }) {
   );
 }
 
-class ListItem extends mohaalak.Component {
+class ListItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -44,8 +44,9 @@ class ListItem extends mohaalak.Component {
   render() {
     const { todo, toggleTodo } = this.props;
     return (
-      <li className={todo.completed ? 'completed' : ''} onclick={this.click}>
-        {`${todo.text} ${this.state.counter}`}
+      <li className={todo.completed ? 'completed' : ''} onClick={this.click}>
+        {todo.text}
+        {this.state.counter}
       </li>
     );
   }
@@ -54,7 +55,7 @@ class ListItem extends mohaalak.Component {
 function FooterItem({ name, value, active, changeFilter }) {
   return (
     <button
-      onclick={() => changeFilter(value)}
+      onClick={() => changeFilter(value)}
       className={active === value && 'active'}
     >
       {name}
@@ -72,7 +73,7 @@ function Footer(props) {
   );
 }
 
-class TodoApp extends mohaalak.Component {
+class TodoApp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -136,14 +137,8 @@ class TodoApp extends mohaalak.Component {
   }
 }
 
-const app = new TodoApp();
-const test = new TestApp();
 function render() {
-  for (let i = 0; i < root.children.length; i++) {
-    root.removeChild(root.children[i]);
-  }
-
-  mohaalak.render(<TodoApp></TodoApp>, root);
+  ReactDOM.render(<TodoApp></TodoApp>, root);
 }
 
 render();
