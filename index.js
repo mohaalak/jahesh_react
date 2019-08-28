@@ -31,5 +31,25 @@ function addTodo(text) {
   ul.appendChild(li);
 }
 
+function createFooter() {
+  const div = document.createElement('div');
+
+  const all = document.createElement('button');
+  all.textContent = 'All';
+
+  const todo = document.createElement('button');
+  todo.textContent = 'Todo';
+
+  const completed = document.createElement('button');
+  completed.textContent = 'Completed';
+
+  div.appendChild(all);
+  div.appendChild(todo);
+  div.appendChild(completed);
+
+  return div;
+}
+
 root.appendChild(createForm());
 root.appendChild(ul);
+root.appendChild(createFooter());
