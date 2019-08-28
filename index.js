@@ -10,9 +10,26 @@ function createForm() {
 
   form.onsubmit = function(event) {
     event.preventDefault();
-    alert(event.target[0].value);
+    addTodo(event.target[0].value);
   };
   return form;
 }
 
+const ul = document.createElement('ul');
+
+function addTodo(text) {
+  const li = document.createElement('li');
+  li.textContent = text;
+
+  li.onclick = function() {
+    if (li.className === 'completed') {
+      li.className = '';
+    } else {
+      li.className = 'completed';
+    }
+  };
+  ul.appendChild(li);
+}
+
 root.appendChild(createForm());
+root.appendChild(ul);
