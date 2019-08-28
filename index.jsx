@@ -1,70 +1,62 @@
 import mohaalak from './mohaalak';
+//@jsx mohaalak.createElement
+
 import { TestApp } from './test.jsx';
 
 const root = document.getElementById('root');
 
 function Form({ onsubmit }) {
-  const form = document.createElement('form');
-  const input = document.createElement('input');
-  const submit = document.createElement('button');
-  submit.textContent = 'Submit';
-  form.appendChild(input);
-  form.appendChild(submit);
-
-  form.onsubmit = function(event) {
-    event.preventDefault();
-    onsubmit(event.target[0].value);
-  };
-  return form;
+  return (
+    <form
+      onsubmit={event => {
+        event.preventDefault();
+        onsubmit(event.target[0].value);
+      }}
+    >
+      <input />
+      <button>submit</button>
+    </form>
+  );
 }
 
 function List({ todos, toggleTodo }) {
-  const ul = document.createElement('ul');
-  for (const todo of todos) {
-    const li = ListItem({ todo, toggleTodo });
-    ul.appendChild(li);
-  }
-  return ul;
+  return <ul>{todos.map(todo => ListItem({ todo, toggleTodo }))}</ul>;
 }
 
 function ListItem({ todo, toggleTodo }) {
-  mohaalak.render({
-    type: 'li',
-    props: { className: 'completed', onclick: () => toggleTodo(todo) }
-  });
-  const li = document.createElement('li');
-  li.textContent = todo.text;
-  li.className = todo.completed ? 'completed' : '';
-  li.onclick = () => toggleTodo(todo);
-  return li;
+  return (
+    <li
+      className={todo.completed ? 'completed' : ''}
+      onclick={() => toggleTodo(todo)}
+    >
+      {todo.text}
+    </li>
+  );
 }
 
 function FooterItem({ name, value, active, changeFilter }) {
-  const button = document.createElement('button');
-  button.textContent = name;
-  button.onclick = () => changeFilter(value);
-  if (value === active) {
-    button.className = 'active';
-  }
-  return button;
+  return (
+    <button
+      onclick={() => changeFilter(value)}
+      className={active === value && 'active'}
+    >
+      {name}
+    </button>
+  );
 }
 
 function Footer(props) {
-  const div = document.createElement('div');
-
-  const all = FooterItem({ ...props, name: 'All', value: 'all' });
-  const todo = FooterItem({ ...props, name: 'Todo', value: 'todo' });
-  const completed = FooterItem({
-    ...props,
-    name: 'Completed',
-    value: 'completed'
-  });
-
-  div.appendChild(all);
-  div.appendChild(todo);
-  div.appendChild(completed);
-
-  return div;
+  return (
+    <div>
+      {FooterItem({ ...props, name: 'All', value: 'all' })}
+      {FooterItem({ ...props, name: 'Todo', value: 'todo' })}
+      {FooterItem({
+        ...props,
+        name: 'Completed',
+        value: 'completed'
+      })}
+    </div>
+  );
 }
 
 class TodoApp {
@@ -122,18 +114,16 @@ class TodoApp {
     }
   }
   render() {
-    const div = document.createElement('div');
-    div.appendChild(Form({ onsubmit: this.addTodo }));
-    div.appendChild(
-      List({ todos: this.filterList(), toggleTodo: this.toggleTodo })
+    return (
+      <div>
+        {Form({ onsubmit: this.addTodo })}
+        {List({ todos: this.filterList(), toggleTodo: this.toggleTodo })}
+        {Footer({
+          active: this.state.visibilityFilter,
+          changeFilter: this.changeFilter
+        })}
+      </div>
     );
-    div.appendChild(
-      Footer({
-        active: this.state.visibilityFilter,
-        changeFilter: this.changeFilter
-      })
-    );
-    return div;
   }
 }
 
@@ -146,7 +136,7 @@ function render() {
 
   // root.appendChild(app.render());
 
-  mohaalak.render(test.render(), root);
+  mohaalak.render(app.render(), root);
 }
 
 render();

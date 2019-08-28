@@ -1,21 +1,18 @@
 import mohaalak from './mohaalak';
+//@jsx mohaalak.createElement
 
 function List({ todos, toggleTodo }) {
-  return mohaalak.createElement(
-    'ul',
-    {},
-    todos.map(todo => ListItem({ todo, toggleTodo }))
-  );
+  return <ul>{todos.map(todo => ListItem({ todo, toggleTodo }))}</ul>;
 }
 
 function ListItem({ todo, toggleTodo }) {
-  return mohaalak.createElement(
-    'li',
-    {
-      className: todo.completed ? 'completed' : '',
-      onclick: () => toggleTodo(todo)
-    },
-    todo.text
+  return (
+    <li
+      className={todo.completed ? 'completed' : ''}
+      onclick={() => toggleTodo()}
+    >
+      {todo.text}
+    </li>
   );
 }
 
