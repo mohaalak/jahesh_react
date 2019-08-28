@@ -20,18 +20,35 @@ function Form({ onsubmit }) {
 }
 
 function List({ todos, toggleTodo }) {
-  return <ul>{todos.map(todo => ListItem({ todo, toggleTodo }))}</ul>;
+  return (
+    <ul>
+      {todos.map(todo => (
+        <ListItem todo={todo} toggleTodo={toggleTodo} />
+      ))}
+    </ul>
+  );
 }
 
-function ListItem({ todo, toggleTodo }) {
-  return (
-    <li
-      className={todo.completed ? 'completed' : ''}
-      onclick={() => toggleTodo(todo)}
-    >
-      {todo.text}
-    </li>
-  );
+class ListItem extends mohaalak.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      counter: 0
+    };
+    this.click = this.click.bind(this);
+    setInterval(() => this.setState({ counter: this.state.counter + 1 }), 1000);
+  }
+  click() {
+    this.props.toggleTodo(this.props.todo);
+  }
+  render() {
+    const { todo, toggleTodo } = this.props;
+    return (
+      <li className={todo.completed ? 'completed' : ''} onclick={this.click}>
+        {`${todo.text} ${this.state.counter}`}
+      </li>
+    );
+  }
 }
 
 function FooterItem({ name, value, active, changeFilter }) {
@@ -48,19 +65,16 @@ function FooterItem({ name, value, active, changeFilter }) {
 function Footer(props) {
   return (
     <div>
-      {FooterItem({ ...props, name: 'All', value: 'all' })}
-      {FooterItem({ ...props, name: 'Todo', value: 'todo' })}
-      {FooterItem({
-        ...props,
-        name: 'Completed',
-        value: 'completed'
-      })}
+      <FooterItem {...props} name="All" value="all" />
+      <FooterItem {...props} name="Todo" value="todo" />
+      <FooterItem {...props} name="Completed" value="completed" />
     </div>
   );
 }
 
-class TodoApp {
-  constructor() {
+class TodoApp extends mohaalak.Component {
+  constructor(props) {
+    super(props);
     this.state = {
       todos: [{ text: 'Get Milk', completed: false }],
       visibilityFilter: 'all'
@@ -68,11 +82,6 @@ class TodoApp {
     this.addTodo = this.addTodo.bind(this);
     this.changeFilter = this.changeFilter.bind(this);
     this.toggleTodo = this.toggleTodo.bind(this);
-  }
-
-  setState(partialState) {
-    this.state = { ...this.state, ...partialState };
-    render();
   }
 
   addTodo(text) {
@@ -116,12 +125,12 @@ class TodoApp {
   render() {
     return (
       <div>
-        {Form({ onsubmit: this.addTodo })}
-        {List({ todos: this.filterList(), toggleTodo: this.toggleTodo })}
-        {Footer({
-          active: this.state.visibilityFilter,
-          changeFilter: this.changeFilter
-        })}
+        <Form onsubmit={this.addTodo}></Form>
+        <List todos={this.filterList()} toggleTodo={this.toggleTodo}></List>
+        <Footer
+          active={this.state.visibilityFilter}
+          changeFilter={this.changeFilter}
+        ></Footer>
       </div>
     );
   }
@@ -134,9 +143,7 @@ function render() {
     root.removeChild(root.children[i]);
   }
 
-  // root.appendChild(app.render());
-
-  mohaalak.render(app.render(), root);
+  mohaalak.render(<TodoApp></TodoApp>, root);
 }
 
 render();
