@@ -39,6 +39,11 @@ function createElement(type, props, ...children) {
       typeof child === 'string'
         ? { type: 'TEXT ELEMENT', nodeValue: child }
         : child
+    )
+    .reduce(
+      (prev, child) =>
+        Array.isArray(child) ? [...prev, ...child] : [...prev, child],
+      []
     );
   return { type, props: { ...props, children: rawChildren } };
 }
