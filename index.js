@@ -50,6 +50,23 @@ function createFooter() {
   return div;
 }
 
-root.appendChild(createForm());
-root.appendChild(ul);
-root.appendChild(createFooter());
+class TodoApp {
+  render() {
+    const div = document.createElement('div');
+    div.appendChild(createForm());
+    div.appendChild(ul);
+    div.appendChild(createFooter());
+    return div;
+  }
+}
+
+const app = new TodoApp();
+function render() {
+  for (let i = 0; i < root.children.length; i++) {
+    root.removeChild(root.children[i]);
+  }
+
+  root.appendChild(app.render());
+}
+
+render();
